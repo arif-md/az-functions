@@ -8,3 +8,8 @@
 ## run the function locally
 * Press F5 to run the function in debug mode.
 * Call the function : Azure Icon(left hand side panel) => Workspace => Local Project => Functions => right click on HttpExample => Execute function now => Hit enter
+## Sign into Azure from VS Code
+* Azure Icon on LHS panel => Sign into Azure => enter AZ portal login credentials in opened browser
+## Create the function app in Azure
+* F1 => Azure Functions: Create Function App in Azure => Enter unique name, region etc and follow the prompts
+## Deploy the project to Azure
