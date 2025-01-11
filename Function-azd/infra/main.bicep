@@ -1,4 +1,4 @@
-targetScope = 'subscription'
+targetScope = 'resourceGroup'
 
 @minLength(1)
 @maxLength(64)
@@ -31,16 +31,16 @@ var tags = { 'azd-env-name': environmentName }
 
 
 // Organize resources in a resource group
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+/*resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
   location: location
   tags: tags
-}
+}*/
 
 // User assigned managed identity to be used by the Function App to reach storage and service bus
 module apiUserAssignedIdentity './core/identity/userAssignedIdentity.bicep' = {
   name: 'apiUserAssignedIdentity'
-  scope: rg
+  //scope: rg
   params: {
     location: location
     tags: tags
@@ -51,7 +51,7 @@ module apiUserAssignedIdentity './core/identity/userAssignedIdentity.bicep' = {
 // The application backend
 module api './app/api.bicep' = {
   name: 'api'
-  scope: rg
+  //scope: rg
   params: {
     name: !empty(apiServiceName) ? apiServiceName : '${abbrs.webSitesFunctions}api-${resourceToken}'
     location: location
@@ -72,7 +72,7 @@ module api './app/api.bicep' = {
 // Backing storage for Azure functions api
 module storage './core/storage/storage-account.bicep' = {
   name: 'storage'
-  scope: rg
+  //scope: rg
   params: {
     name: !empty(storageAccountName) ? storageAccountName : '${abbrs.storageStorageAccounts}${resourceToken}'
     location: location
@@ -90,7 +90,7 @@ var storageRoleDefinitionId  = 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b' //Storage 
 // Allow access from api to storage account using a managed identity
 module storageRoleAssignmentApi 'app/storage-Access.bicep' = {
   name: 'storageRoleAssignmentApi'
-  scope: rg
+  //scope: rg
   params: {
     storageAccountName: storage.outputs.name
     roleDefinitionID: storageRoleDefinitionId
@@ -100,7 +100,7 @@ module storageRoleAssignmentApi 'app/storage-Access.bicep' = {
 
 module appServicePlan './core/host/appserviceplan.bicep' = {
   name: 'appserviceplan'
-  scope: rg
+  //scope: rg
   params: {
     name: !empty(appServicePlanName) ? appServicePlanName : '${abbrs.webServerFarms}${resourceToken}'
     location: location
@@ -115,7 +115,7 @@ module appServicePlan './core/host/appserviceplan.bicep' = {
 // Virtual Network & private endpoint
 module serviceVirtualNetwork 'app/vnet.bicep' =  if (!skipVnet) {
   name: 'serviceVirtualNetwork'
-  scope: rg
+  //scope: rg
   params: {
     location: location
     tags: tags
@@ -125,7 +125,7 @@ module serviceVirtualNetwork 'app/vnet.bicep' =  if (!skipVnet) {
 
 module storagePrivateEndpoint 'app/storage-PrivateEndpoint.bicep' = if (!skipVnet) {
   name: 'servicePrivateEndpoint'
-  scope: rg
+  //scope: rg
   params: {
     location: location
     tags: tags
@@ -138,7 +138,7 @@ module storagePrivateEndpoint 'app/storage-PrivateEndpoint.bicep' = if (!skipVne
 // Monitor application with Azure Monitor
 module monitoring './core/monitor/monitoring.bicep' = {
   name: 'monitoring'
-  scope: rg
+  //scope: rg
   params: {
     location: location
     tags: tags
