@@ -1,4 +1,4 @@
-# Demo Apps to show case Azure Functions
+# Azure Functions by using VS Code
 ## Prerequisites
 * Acvite Azure subscription
 * VS Code with extensions : "Java extension pack" and "Auzre Functions extension" or "Azure Tools".
