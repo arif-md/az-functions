@@ -14,5 +14,5 @@
 * F1 => Azure Functions: Create Function App in Azure => Enter unique name, region etc and follow the prompts
 ## Deploy the project to Azure
 * F1 => Azure Functions: Deploy to Function App: Select function app created in AZ and followt the prompts.
-* application should be available @ <functioname>.azurewebsites.net/api/HttpExample
+* application should be available @ functioname.azurewebsites.net/api/HttpExample
 * Example url : https://raptorfunction1.azurewebsites.net/api/HttpExample?name=Hello%20Mohammed
