@@ -13,7 +13,15 @@ languages:
 - azdeveloper
 ---
 -->
-
+# Accessing the app deployed to Azure
+1) Get the complete url including the access key
+   - APP_NAME=$(azd env get-value AZURE_FUNCTION_NAME)
+   - func azure functionapp list-functions $APP_NAME --show-keys
+   - use the urls in browser from above output
+2) Goto the summary blade of the function app in Azure
+   - copy default domain name
+   - at the bottom of the same page, click on any function, goto function keys and copy the default key
+   - url format is <domain name>/api/httpget?code=<access key>
 # Azure Functions Java HTTP Trigger using AZD
 
 This repository contains an Azure Functions HTTP trigger reference sample written in Java and deployed to Azure using Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting SKIP_VNET to true in the parameters.
