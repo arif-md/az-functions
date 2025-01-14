@@ -8,3 +8,12 @@ services:
     project: ./http/
     language: java
     host: function
+infra:
+  provider: bicep
+  deploymentStacks:
+    actionOnUnmanage:
+      resources: delete
+    denySettings:
+      mode: denyDelete
+      excludedActions:
+        - Microsoft.Resources/subscriptions/resourceGroups/delete
