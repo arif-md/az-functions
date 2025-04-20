@@ -17,6 +17,6 @@ az keyvault secret set --vault-name my-raptor-keyvault --name COSMOS-DB-CONNECTI
 ```
   * Assign Key Vault Access to Your Azure Function
     * Enable Managed Identity: Go to Function App → Settings → Identity → Under System assigned, set Status to On → Save
-    * Grant it access to the Key Vault
+    * Grant it access to the Key Vault(`az keyvault set-policy --name my-raptor-keyvault --object-id <PRINCIPAL_ID> --secret-permissions get list`)
 
   
