@@ -16,6 +16,7 @@
     "cosmosDB": {
         "connectionMode": "Direct"
     }
-  }
+  },
+  "functionTimeout": "00:10:00"
   
 }
