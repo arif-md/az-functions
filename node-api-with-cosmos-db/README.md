@@ -10,13 +10,17 @@
   * Copy the id/partition key for one of the document
   * Copy the Cosmos DB PRIMARY CONNECTION STRING from Cosmos DB Acc -> settings -> keys
   * Make sure that the DB is publicly accesible under Cosmos DB Acc -> settings -> Networking -> Public access -> All networks
-* Create an Azure Key vault and store the above DB connection string in key vault.
-```
-az keyvault create --name my-raptor-keyvault --resource-group rg-raptor-dev --location eastus
-az keyvault secret set --vault-name my-raptor-keyvault --name COSMOS-DB-CONNECTION-STRING --value "AccountEndpoint=;AccountKey="
-```
+* Key vault setup
+  * Create an Azure Key vault and store the above DB connection string in key vault.
+  ```
+  az keyvault create --name my-raptor-keyvault --resource-group rg-raptor-dev --location eastus
+  az keyvault secret set --vault-name my-raptor-keyvault --name COSMOS-DB-CONNECTION-STRING --value "AccountEndpoint=;AccountKey="
+  ```
   * Assign Key Vault Access to Your Azure Function
     * Enable Managed Identity: Go to Function App → Settings → Identity → Under System assigned, set Status to On → Save
-    * Grant it access to the Key Vault(`az keyvault set-policy --name my-raptor-keyvault --object-id <PRINCIPAL_ID> --secret-permissions get list`)
+    * Grant it access to the Key Vault(`az keyvault set-policy --name my-raptor-keyvault --object-id <PRINCIPAL_ID> --secret-permissions get list`). Where PRINCIPAL_ID is function apps identity.
+  * Reference Secret in Azure App Settings
+    * Function App → Configuration → Application settings → New application setting → Name : COSMOS_DB_CONNECTION_STRING & Value : @Microsoft.KeyVault(SecretUri=https://my-raptor-keyvault.vault.azure.net/secrets/COSMOS-DB-CONNECTION-STRING/)
+
 
   
