@@ -1,5 +1,6 @@
 # Sample NodeJS API with Cosmos DB
 ## prerequisites
+* Refer to the parent project README instructions and then follow these instructions. 
 * Node and NPM is installed.
 * Function core tools extension is installed in VS code
 * Cosmos DB account is created with the following details
@@ -9,3 +10,13 @@
   * Copy the id/partition key for one of the document
   * Copy the Cosmos DB PRIMARY CONNECTION STRING from Cosmos DB Acc -> settings -> keys
   * Make sure that the DB is publicly accesible under Cosmos DB Acc -> settings -> Networking -> Public access -> All networks
+* Create an Azure Key vault and store the above DB connection string in key vault.
+```
+az keyvault create --name my-raptor-keyvault --resource-group rg-raptor-dev --location eastus
+az keyvault secret set --vault-name my-raptor-keyvault --name COSMOS-DB-CONNECTION-STRING --value "AccountEndpoint=;AccountKey="
+```
+  * Assign Key Vault Access to Your Azure Function
+    * Enable Managed Identity: Go to Function App → Settings → Identity → Under System assigned, set Status to On → Save
+    * Grant it access to the Key Vault
+
+  
