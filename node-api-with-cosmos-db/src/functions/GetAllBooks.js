@@ -13,15 +13,14 @@ app.http('GetAllBooks', {
     methods: ['GET'],
     authLevel: 'anonymous',
     // Pass input binding correctly as an object
-    inputs: {
+    /*inputs: {
       book: cosmosInput,  // 'book' is now correctly defined as a key with the input binding
-    },
+    },*/
+    extraInputs: [cosmosInput],
     handler: async (request, context) => {
-        context.log(`Recieved id 2 = "${request.params.id}", partitionKeyValue = "${request.params.partitionKeyValue}"`);
-        // Access the book from the extraInputs
-        const book = context.inputs.get('book');        
-        context.log(`Received book object: ${JSON.stringify(book)}`);
-        process.env.AZURE_COSMOS_VERBOSE_LOGGING = 'true';
+        const book = context.extraInputs.get(cosmosInput);  
+        //context.log(`Received book object: ${JSON.stringify(book)}`);
+        //process.env.AZURE_COSMOS_VERBOSE_LOGGING = 'true';
 
         if (!book) {
             return {
