@@ -23,7 +23,7 @@ app.http('UpdateBookById', {
         const book = context.extraInputs.get(cosmosInput);  
         const body = await request.json();
 
-        if(body && book.id) {
+        if(body && book?.id) {
             const bookToUpdate = {
                 id: book.id,
                 author : body.author || book.author,
@@ -36,7 +36,7 @@ app.http('UpdateBookById', {
                 status: 200,
                 body: JSON.stringify(bookToUpdate, null, 2)
             };
-        }else if(!book.id) {
+        }else if(!book?.id) {
             return {
                 status: 400,
                 body: 'Could not find the book with the given id.',
