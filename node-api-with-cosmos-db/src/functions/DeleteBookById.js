@@ -1,45 +1,37 @@
 const { app, input, output } = require('@azure/functions');
-
-const cosmosInput = input.cosmosDB({
-    databaseName: 'BookDB',
-    containerName: 'BookContainer',
-    id: '{Query.id}',       
-    partitionKey: '{Query.partitionKeyValue}',                    
-    connection: 'COSMOS_DB_CONNECTION_STRING',
-});
-
-// Output binding: Delete the document
-const cosmosOutput = output.cosmosDB({
-    databaseName: 'BookDB',
-    containerName: 'BookContainer',
-    connection: 'COSMOS_DB_CONNECTION_STRING',
-    createIfNotExists: false,
-    delete: true // 👈 tells Cosmos to delete the document
-});
+const { CosmosClient } = require('@azure/cosmos');
 
 app.http('DeleteBookById', {
     methods: ['DELETE'],
     authLevel: 'anonymous',
-    extraInputs: [cosmosInput],
-    extraOutputs: [cosmosOutput],
     handler: async (request, context) => {
-        const bookToDelete = context.extraInputs.get(cosmosInput);
-        context.log("Book to delete:", JSON.stringify(bookToDelete));
-        if (!bookToDelete || !bookToDelete.id) {
+        const id = request.query.get('id');
+        const partitionKeyValue = request.query.get('partitionKeyValue');
+
+        if (!id || !partitionKeyValue) {
             return {
-                status: 404,
-                body: 'Book not found.'
+                status: 400,
+                body: 'Missing id or partitionKeyValue in query.'
             };
         }
-        // Set the document to delete
-        context.extraOutputs.set(cosmosOutput, {
-            id: bookToDelete.id,
-            author: bookToDelete.author // 👈 must include partition key!
-        }); 
-        context.log("Going to delete:", JSON.stringify({ id: bookToDelete.id, author: bookToDelete.author }))   
-        return {
-            status: 200,
-            body: `Book with ID ${bookToDelete.id} deleted successfully.`
-        };            
+
+        try {
+            const client = new CosmosClient(process.env.COSMOS_DB_CONNECTION_STRING);
+            const container = client.database('BookDB').container('BookContainer');
+
+            await container.item(id, partitionKeyValue).delete();
+            
+            return {
+                status: 200,
+                body: `Book with ID ${id} deleted successfully.`
+            };
+        } catch (err) {
+            context.log('Delete failed:', err.message);
+            return {
+                status: 500,
+                body: 'Failed to delete the book. ' + err.message
+            };
+        }        
+
     }
 });
